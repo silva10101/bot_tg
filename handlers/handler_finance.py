@@ -18,6 +18,7 @@ class FSMFinance(StatesGroup):
     add_nday = State()
     delete = State()
     date = State()
+    month = State()
 
 
 
@@ -36,7 +37,7 @@ async def write_bd(message : types.Message, state: FSMContext):
     data.extend(datetime.now().strftime("%d %m %Y").split(' '))
     await bd_finance.sql_add_command(data) 
     await state.finish()
-    await message.reply('Данные записаны')
+    await message.reply('Данные записаны', reply_markup=kb_finance)
 
 
 async def add_nday_event(message : types.Message):
@@ -49,7 +50,7 @@ async def write_nday_bd(message : types.Message, state: FSMContext):
     data = message.text.split(' ')
     await bd_finance.sql_add_command(data) 
     await state.finish()
-    await message.reply('Данные записаны')
+    await message.reply('Данные записаны', reply_markup=kb_finance)
 
 
 async def delete_event(message : types.Message):
@@ -62,7 +63,7 @@ async def delete_bd(message : types.Message, state: FSMContext):
     data = message.text.split(' ')
     await bd_finance.sql_delete_command(data) 
     await state.finish()
-    await message.reply('Данные удалены')
+    await message.reply('Данные удалены', reply_markup=kb_finance)
 
 
 async def show_day(message : types.Message):
@@ -75,11 +76,25 @@ async def show_day_finance(message : types.Message, state: FSMContext):
     data = message.text.split(' ')
     await bd_finance.sql_read_command(message, data)
     await state.finish()
+    await message.reply('Всё показал', reply_markup=kb_finance)
 
 async def show_today(message : types.Message):
     """выводим статистику сегодня"""
     data = datetime.now().strftime("%d %m %Y").split(' ')
     await bd_finance.sql_read_command(message, data)
+    await message.reply('Всё показал', reply_markup=kb_finance)
+
+async def show_month(message : types.Message):
+    """выводим статистику месяца"""
+    await bot.send_message(message.from_user.id, 'Введите месяц и год(мм гггг)')
+    await FSMFinance.month.set()
+
+async def show_month_finance(message : types.Message, state: FSMContext):
+    """выводим данные дня"""
+    data = message.text.split(' ')
+    await bd_finance.sql_read_m_command(message, data)
+    await state.finish()
+    await message.reply('Всё показал', reply_markup=kb_finance)
 
 
 async def cancel(message:types.Message,state:FSMContext):
@@ -88,7 +103,7 @@ async def cancel(message:types.Message,state:FSMContext):
     if current_state is None:
         return
     await state.finish()
-    await message.reply('Отменено')
+    await message.reply('Отменено', reply_markup=kb_finance)
 
 
 
@@ -114,7 +129,8 @@ def register_handlers(dp : Dispatcher):
     dp.register_message_handler(show_day_finance, state=FSMFinance.date)
     dp.register_message_handler(show_today, commands=['today_report'])
 
-
+    dp.register_message_handler(show_month, commands=['month_report'])
+    dp.register_message_handler(show_month_finance, state=FSMFinance.month)
 
 
 

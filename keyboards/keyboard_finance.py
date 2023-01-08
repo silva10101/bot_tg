@@ -11,12 +11,17 @@ button_delete = KeyboardButton('/delete')
 
 button_cancel = KeyboardButton('/отмена')
 
+button_balance = KeyboardButton('/balance')
+button_month = KeyboardButton('/month_report')
+
 
 kb_finance = ReplyKeyboardMarkup(resize_keyboard=True)
 
 kb_finance.row(button_add, button_add_nday)
 kb_finance.row(button_today_report, button_nday_report)
 kb_finance.row(button_delete, button_cancel)
+kb_finance.row(button_balance, button_month)
+
 
 
 
