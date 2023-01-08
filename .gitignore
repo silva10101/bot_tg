@@ -1,0 +1,5 @@
+bot_venv/
+.idea/
+__pycache__/
+start.bat
+base_finance.db
