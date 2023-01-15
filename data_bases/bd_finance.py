@@ -17,12 +17,13 @@ def db_finance_start():
 		description TEXT, 
 		day TEXT, 
 		month TEXT, 
-		year TEXT)''')
+		year TEXT,
+		id_user TEXT)''')
 	base.commit()
 
 
 async def sql_add_command(data):
-	cur.execute('INSERT INTO money VALUES (?, ?, ?, ?, ?, ?)', tuple(data))
+	cur.execute('INSERT INTO money VALUES (?, ?, ?, ?, ?, ?, ?)', tuple(data))
 	base.commit()
 	print('добавил', data)
 
