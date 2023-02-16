@@ -49,7 +49,7 @@ async def write_nday_bd(message : types.Message, state: FSMContext):
     """Добавляем сумму"""
     data = message.text.split(' ')
     data.append(message.from_user.id)
-    await bd_finance.sql_add_command(data) pipi
+    await bd_finance.sql_add_command(data) 
     await state.finish()
     await message.reply('Данные записаны', reply_markup=kb_finance)
 
